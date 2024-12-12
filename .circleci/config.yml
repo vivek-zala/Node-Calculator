@@ -10,9 +10,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            npm install  # Install project dependencies
             echo "Here it will show"
             echo $CIRCLE_PULL_REQUEST
+            npm install  # Install project dependencies
       - run:
           name: Run tests
           command: |
