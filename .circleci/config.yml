@@ -25,7 +25,7 @@ jobs:
             # Check if this is a PR by inspecting the CIRCLE_PULL_REQUEST variable
             if [ -z "$CIRCLE_PULL_REQUEST" ]; then
               echo "This is not a PR, skipping job."
-              exit 1  # Fail if not a PR
+               # Fail if not a PR
             fi
             
             # Extract the PR target branch from CIRCLE_PULL_REQUEST
