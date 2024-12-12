@@ -20,8 +20,8 @@ workflows:
   version: 2
   validate:
     jobs:
-      - test
-    filters:
-      pull_requests:
-        only:
-          - Pull_Request_Test  # Trigger when a PR targets the Pull_Request_Test branch
+      - test:
+          filters:
+            pull_requests:
+              only:
+                - Pull_Request_Test  # Trigger when a PR targets the Pull_Request_Test branch
