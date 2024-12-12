@@ -22,7 +22,4 @@ workflows:
           filters:
             branches:
               only:
-                - Pull_Request_Test  # Specify the branch that triggers the PR
-            pull_requests:
-              only:
-                - Pull_Request_Test  # Trigger only for PR targeting this branch
+                - Pull_Request_Test  # This ensures it only runs when the PR targets this branch
