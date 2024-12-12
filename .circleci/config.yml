@@ -11,7 +11,7 @@ jobs:
           name: Install dependencies
           command: |
             echo "Here it will show"
-            echo $CIRCLE_PULL_REQUEST
+            echo $CIRCLE_PULL_REQUESTS
             npm install  # Install project dependencies
       - run:
           name: Run tests
@@ -25,14 +25,14 @@ jobs:
       - run:
           name: Check if PR and targeting correct branch
           command: |
-            # Check if this is a PR by inspecting the CIRCLE_PULL_REQUEST variable
-            if [ -z "$CIRCLE_PULL_REQUEST" ]; then
+            # Check if this is a PR by inspecting the CIRCLE_PULL_REQUESTS variable
+            if [ -z "$CIRCLE_PULL_REQUESTS" ]; then
               echo "This is not a PR, skipping job."
                # Fail if not a PR
             fi
             
-            # Extract the PR target branch from CIRCLE_PULL_REQUEST
-            PR_BRANCH=$(echo $CIRCLE_PULL_REQUEST | sed 's#.*/\(.*\)/pull/\([0-9]*\)#\1#')
+            # Extract the PR target branch from CIRCLE_PULL_REQUESTS
+            PR_BRANCH=$(echo $CIRCLE_PULL_REQUESTS | sed 's#.*/\(.*\)/pull/\([0-9]*\)#\1#')
 
             # Check if the PR is targeting the correct branch
             if [ "$PR_BRANCH" != "Pull_Request_Test" ]; then
