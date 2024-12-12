@@ -15,20 +15,6 @@ jobs:
           command: |
             npm test  # Run the tests using Jest
 
-workflows:
-  version: 2
-  build_test:
-    jobs:
-      - test:
-          filters:
-            branches:
-              only:
-                - Pull_Request_Test  # Trigger when a PR targets this branch
-          # We will use an environment variable check to make sure the job runs only for PRs
-          requires:
-            - check-pr
-          
-  # A helper job to check if it's a PR targeting Pull_Request_Test
   check-pr:
     docker:
       - image: cimg/python:3.8  # A simple image for running script checks
@@ -46,3 +32,16 @@ workflows:
               exit 1;  # Fail if PR is not targeting Pull_Request_Test
             fi
             echo "PR is targeting Pull_Request_Test, continuing the job."
+
+workflows:
+  version: 2
+  build_test:
+    jobs:
+      - check-pr  # Ensure this job runs first to check if it's a PR targeting the correct branch
+      - test:
+          requires:
+            - check-pr  # The test job will run only if the check-pr job passes
+          filters:
+            branches:
+              only:
+                - Pull_Request_Test  # Ensure the pipeline runs only for PRs targeting this branch
