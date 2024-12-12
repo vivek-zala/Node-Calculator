@@ -22,6 +22,6 @@ workflows:
     jobs:
       - test:
           filters:
-            pull_requests:
+            branches:
               only:
-                - Pull_Request_Test  # Trigger when a PR targets the Pull_Request_Test branch
+                - Pull_Request_Test  # This ensures it only runs when a PR targets this branch
