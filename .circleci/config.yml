@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/node:14  # Use the CircleCI Node.js Docker image
+      - image: circleci/node:18  # Use the CircleCI Node.js Docker image
     working_directory: ~/repo  # Set working directory to the root of the project
     steps:
       - checkout  # Checkout the code from your repository
@@ -16,6 +16,10 @@ jobs:
 
 workflows:
   version: 2
-  build:
+  validate:
     jobs:
-      - test  # Run the 'test' job
+      - test:
+          filters:
+            pull_requests:
+              only: 
+                - 
