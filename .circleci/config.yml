@@ -14,6 +14,7 @@ jobs:
           name: Run tests
           command: |
             npm test  # Run the tests using Jest
+            echo $CIRCLE_PULL_REQUEST
 
   check-pr:
     docker:
@@ -37,6 +38,20 @@ jobs:
               exit 1  # Fail if PR is not targeting Pull_Request_Test
             fi
             echo "PR is targeting Pull_Request_Test, continuing the job."
+
+# if [ $CIRCLE_BRANCH <> "master" ]; then
+#   echo "Double checking for PR on $CIRCLE_BRANCH to work around Circle platform bug"
+#   PR_NUMBER=`curl -X GET -u $BITBUCKET_USER:$BITBUCKET_PASS \
+# https://api.bitbucket.org/2.0/repositories/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pullrequests/?q=source.branch.name%3D%22$CIRCLE_BRANCH%22 \
+# | grep -o 'https:\/\/api.bitbucket.org\/2.0\/repositories\/messageagency\/jcb\/pullrequests\/[0-9]*' \
+# | grep -o '[0-9]*$' | head -1`
+
+#   if [[ $PR_NUMBER =~ ^-?[0-9]+$ ]] ; then
+#     echo "Found PR ${PR_NUMBER}"
+#     # do whatever you need with the PR number here
+#     # ...
+#   fi
+# fi
 
 workflows:
   version: 2
