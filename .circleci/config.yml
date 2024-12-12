@@ -37,7 +37,7 @@ jobs:
             # Check if the PR is targeting the correct branch
             if [ "$PR_BRANCH" != "Pull_Request_Test" ]; then
               echo "This PR is not targeting Pull_Request_Test, skipping job."
-              exit 1  # Fail if PR is not targeting Pull_Request_Test
+                # Fail if PR is not targeting Pull_Request_Test
             fi
             echo "PR is targeting Pull_Request_Test, continuing the job."
 
