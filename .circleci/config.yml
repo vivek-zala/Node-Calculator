@@ -20,16 +20,21 @@ jobs:
       - image: cimg/python:3.8  # A simple image for running script checks
     steps:
       - run:
-          name: Check PR
+          name: Check if PR and targeting correct branch
           command: |
+            # Check if this is a PR by inspecting the CIRCLE_PULL_REQUEST variable
             if [ -z "$CIRCLE_PULL_REQUEST" ]; then
-              echo "This is not a PR, skipping job.";
-              exit 1;  # Fail if not a PR
+              echo "This is not a PR, skipping job."
+              exit 1  # Fail if not a PR
             fi
+            
+            # Extract the PR target branch from CIRCLE_PULL_REQUEST
             PR_BRANCH=$(echo $CIRCLE_PULL_REQUEST | sed 's#.*/\(.*\)/pull/\([0-9]*\)#\1#')
+
+            # Check if the PR is targeting the correct branch
             if [ "$PR_BRANCH" != "Pull_Request_Test" ]; then
-              echo "This PR is not targeting Pull_Request_Test, skipping job.";
-              exit 1;  # Fail if PR is not targeting Pull_Request_Test
+              echo "This PR is not targeting Pull_Request_Test, skipping job."
+              exit 1  # Fail if PR is not targeting Pull_Request_Test
             fi
             echo "PR is targeting Pull_Request_Test, continuing the job."
 
@@ -37,11 +42,11 @@ workflows:
   version: 2
   build_test:
     jobs:
-      - check-pr  # Ensure this job runs first to check if it's a PR targeting the correct branch
+      - check-pr  # Run the PR check first to validate PR context
       - test:
           requires:
-            - check-pr  # The test job will run only if the check-pr job passes
+            - check-pr  # The test job will only run if check-pr passes
           filters:
             branches:
               only:
-                - Pull_Request_Test  # Ensure the pipeline runs only for PRs targeting this branch
+                - Pull_Request_Test  # Ensure it runs for the right PR target branch
