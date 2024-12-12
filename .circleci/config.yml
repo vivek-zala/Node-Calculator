@@ -22,6 +22,6 @@ workflows:
     jobs:
       - test:
           filters:
-            pull_requests:
+            branches:
               only:
                 - Pull_Request_Test  # This ensures the pipeline runs only when a PR is created targeting this branch
