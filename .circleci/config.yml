@@ -9,10 +9,7 @@ jobs:
       - checkout  # Checkout the code from your repository
       - run:
           name: Install dependencies
-          command: |
-            echo "Here it will show"
-            echo $CIRCLE_PULL_REQUESTS
-            npm install  # Install project dependencies
+          command: npm install  # Install project dependencies
       - run:
           name: Run tests
           command: |
@@ -26,6 +23,8 @@ jobs:
           name: Check if PR and targeting correct branch
           command: |
             # Check if this is a PR by inspecting the CIRCLE_PULL_REQUESTS variable
+            echo "Here it will show"
+            echo $CIRCLE_PULL_REQUESTS
             if [ -z "$CIRCLE_PULL_REQUESTS" ]; then
               echo "This is not a PR, skipping job."
                # Fail if not a PR
