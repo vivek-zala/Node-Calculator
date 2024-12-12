@@ -13,8 +13,8 @@ jobs:
       - run:
           name: Run tests
           command: |
-            npm test  # Run the tests using Jest
             echo ${CIRCLE_BRANCH}
+            npm test  # Run the tests using Jest
 
 workflows:
   version: 2
