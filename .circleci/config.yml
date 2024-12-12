@@ -16,11 +16,33 @@ jobs:
             npm test  # Run the tests using Jest
 
 workflows:
+  version: 2
   build_test:
-      jobs:
-        - test:
-            filters:
-              branches:
-                only:
-                  - Pull_Request_Test  # This ensures the pipeline runs only when a PR is created targeting this branch
-              when: << pipeline.parameters.is_pr >>
+    jobs:
+      - test:
+          filters:
+            branches:
+              only:
+                - Pull_Request_Test  # Trigger when a PR targets this branch
+          # We will use an environment variable check to make sure the job runs only for PRs
+          requires:
+            - check-pr
+          
+  # A helper job to check if it's a PR targeting Pull_Request_Test
+  check-pr:
+    docker:
+      - image: cimg/python:3.8  # A simple image for running script checks
+    steps:
+      - run:
+          name: Check PR
+          command: |
+            if [ -z "$CIRCLE_PULL_REQUEST" ]; then
+              echo "This is not a PR, skipping job.";
+              exit 1;  # Fail if not a PR
+            fi
+            PR_BRANCH=$(echo $CIRCLE_PULL_REQUEST | sed 's#.*/\(.*\)/pull/\([0-9]*\)#\1#')
+            if [ "$PR_BRANCH" != "Pull_Request_Test" ]; then
+              echo "This PR is not targeting Pull_Request_Test, skipping job.";
+              exit 1;  # Fail if PR is not targeting Pull_Request_Test
+            fi
+            echo "PR is targeting Pull_Request_Test, continuing the job."
