@@ -9,12 +9,13 @@ jobs:
       - checkout  # Checkout the code from your repository
       - run:
           name: Install dependencies
-          command: npm install  # Install project dependencies
+          command: |
+            npm install  # Install project dependencies
+            echo $CIRCLE_PULL_REQUEST
       - run:
           name: Run tests
           command: |
             npm test  # Run the tests using Jest
-            echo $CIRCLE_PULL_REQUEST
 
   check-pr:
     docker:
