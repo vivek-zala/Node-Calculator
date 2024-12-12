@@ -17,7 +17,6 @@ jobs:
 
 workflows:
   build_test:
-    validate:
       jobs:
         - test:
             filters:
