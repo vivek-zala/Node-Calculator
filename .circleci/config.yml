@@ -12,7 +12,9 @@ jobs:
           command: npm install  # Install project dependencies
       - run:
           name: Run tests
-          command: npm test  # Run the tests using Jest
+          command: |
+            npm test  # Run the tests using Jest
+            echo ${CIRCLE_BRANCH}
 
 workflows:
   version: 2
