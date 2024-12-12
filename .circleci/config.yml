@@ -27,7 +27,7 @@ jobs:
             echo $CIRCLE_PULL_REQUESTS
             if [ -z "$CIRCLE_PULL_REQUESTS" ]; then
               echo "This is not a PR, skipping job."
-               # Fail if not a PR
+              exit 1 # Fail if not a PR
             fi
             
             # Extract the PR target branch from CIRCLE_PULL_REQUESTS
@@ -36,7 +36,7 @@ jobs:
             # Check if the PR is targeting the correct branch
             if [ "$PR_BRANCH" != "Pull_Request_Test" ]; then
               echo "This PR is not targeting Pull_Request_Test, skipping job."
-                # Fail if PR is not targeting Pull_Request_Test
+              exit 1  # Fail if PR is not targeting Pull_Request_Test
             fi
             echo "PR is targeting Pull_Request_Test, continuing the job."
 
