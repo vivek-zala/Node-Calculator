@@ -14,14 +14,13 @@ jobs:
           name: Run tests
           command: |
             npm test  # Run the tests using Jest
-            echo ${CIRCLE_BRANCH}
 
 workflows:
-  version: 2
-  validate:
-    jobs:
-      - test:
-          filters:
-            branches:
-              only:
-                - Pull_Request_Test  # This ensures the pipeline runs only when a PR is created targeting this branch
+  build_test:
+    validate:
+      jobs:
+        - test:
+            filters:
+              branches:
+                only:
+                  - Pull_Request_Test  # This ensures the pipeline runs only when a PR is created targeting this branch
