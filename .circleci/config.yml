@@ -28,5 +28,5 @@ workflows:
       - test:
           filters:
             branches:
-              only: main
+              only: Pull_Request_Test
               # ignore: /.*/  # Ignore all branches for this workflow, only PRs will trigger
