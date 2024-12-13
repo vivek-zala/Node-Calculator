@@ -18,7 +18,7 @@ jobs:
           name: Verify PR source
           command: |
             # Check if this is a PR from a forked repository
-            if [[ -n "$CIRCLE_PULLREQUEST" && "$CIRCLE_PULLREQUEST" == *"github.com"* ]]; then
+            if [[ -n "$CIRCLE_PULL_REQUEST" && "$CIRCLE_PULL_REQUEST" == *"github.com"* ]]; then
               echo "PR is from a forked repository. Proceeding with the build."
             else
               echo "This PR is not from a forked repository. Skipping the build."
