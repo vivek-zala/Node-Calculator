@@ -3,11 +3,9 @@ name: PR Workflow
 on:
   pull_request:
     branches:
-      - Pull_Request_Test
+      - feature-branch
     types:
       - opened
-      - reopened
-
 
 jobs:
   check-fork-and-branch:
