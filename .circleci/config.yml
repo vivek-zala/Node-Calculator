@@ -32,5 +32,4 @@ workflows:
       - build:
           filters:
             branches:
-              - Pull_Request_Test
-              - main
+              only: Pull_Request_Test
