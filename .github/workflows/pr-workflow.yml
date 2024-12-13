@@ -3,7 +3,7 @@ name: PR Workflow
 on:
   pull_request:
     branches:
-      - Pull_Request_Test
+      - main
 
 jobs:
   check-fork-and-branch:
