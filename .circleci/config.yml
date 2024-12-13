@@ -26,5 +26,5 @@ workflows:
     jobs:
       - test:
           filters:
-            branches:
-              ignore: /.*/  # Ignore all branches for this workflow, only PRs will trigger
+            branches: main
+              # ignore: /.*/  # Ignore all branches for this workflow, only PRs will trigger
