@@ -1,32 +1,35 @@
 version: 2.1
 
 jobs:
-  test:
+  build:
     docker:
-      - image: cimg/node:23.4.0-browsers
+      - image: circleci/node:16  # Use an official Node.js Docker image (adjust version as needed)
     steps:
-      - checkout
+      - checkout  # Checkout the code from the PR
       - run:
-          name: Check if PR is open
+          name: Install dependencies
           command: |
-            # Check if the current build was triggered by a PR
-            if [ -z "${CIRCLE_PULL_REQUEST}" ]; then
-              echo "This is not a PR, skipping job.";
-              exit 0;  # Skip job if not a PR
+            npm install  # Install the Node.js project dependencies
+      - run:
+          name: Run tests
+          command: |
+            npm test  # Run tests (assuming you have a test script in package.json)
+      - run:
+          name: Verify PR source
+          command: |
+            # Check if this is a PR from a forked repository
+            if [[ -n "$CIRCLE_PULLREQUEST" && "$CIRCLE_PULLREQUEST" == *"github.com"* ]]; then
+              echo "PR is from a forked repository. Proceeding with the build."
             else
-              echo "PR Detected: ${CIRCLE_PULL_REQUEST}";
+              echo "This PR is not from a forked repository. Skipping the build."
+              exit 0  # Stop the build if it's not from a forked repository
             fi
-      - run:
-          name: Run Tests
-          command: |
-            echo "Running tests for PR..."
-            echo $CIRCLE_PULL_REQUEST
 
 workflows:
-  build_test:
+  version: 2
+  pr-build:
     jobs:
-      - test:
+      - build:
           filters:
             branches:
-              only: Pull_Request_Test
-              # ignore: /.*/  # Ignore all branches for this workflow, only PRs will trigger
+              only: Pull_Request_Test  # Only trigger for PRs targeting the `main` branch
