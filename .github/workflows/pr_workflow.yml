@@ -6,6 +6,8 @@ on:
       - feature-branch
     types:
       - opened
+      - synchronize
+      - reopened
 
 jobs:
   check-fork-and-branch:
