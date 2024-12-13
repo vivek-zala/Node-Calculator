@@ -4,8 +4,7 @@ on:
   pull_request:
     branches:
       - feature-branch
-      - Pull_Request_Test
-      - priyanka_branch
+      - develop-branch
     types:
       - opened
       - synchronize
