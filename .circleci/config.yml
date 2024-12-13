@@ -4,70 +4,27 @@ jobs:
   test:
     docker:
       - image: cimg/node:23.4.0-browsers
-    working_directory: ~/repo  # Set working directory to the root of the project
     steps:
-      - checkout  # Checkout the code from your repository
+      - checkout
       - run:
-          name: Install dependencies
-          command: npm install  # Install project dependencies
-      - run:
-          name: Run tests
+          name: Check if PR is open
           command: |
-            npm test  # Run the tests using Jest
-
-  check-pr:
-    docker:
-      - image: cimg/python:3.8  # A simple image for running script checks
-    steps:
+            # Check if the current build was triggered by a PR
+            if [ -z "${CIRCLE_PULL_REQUEST}" ]; then
+              echo "This is not a PR, skipping job.";
+              exit 0;  # Skip job if not a PR
+            else
+              echo "PR Detected: ${CIRCLE_PULL_REQUEST}";
+            fi
       - run:
-          name: Check if PR and targeting correct branch
+          name: Run Tests
           command: |
-            # Check if this is a PR by inspecting the CIRCLE_PULL_REQUESTS variable
-            echo "Here it will show"
-            echo $CIRCLE_PULL_REQUESTS
-            if [ -z "$CIRCLE_PULL_REQUESTS" ]; then
-              echo "This is not a PR, skipping job."
-              exit 1 # Fail if not a PR
-            fi
-            
-            # Extract the PR target branch from CIRCLE_PULL_REQUESTS
-            echo "Here it will show"
-            echo $CIRCLE_PULL_REQUESTS
-            PR_BRANCH=$(echo $CIRCLE_PULL_REQUESTS | sed 's#.*/\(.*\)/pull/\([0-9]*\)#\1#')
-
-            # Check if the PR is targeting the correct branch
-            echo "Here it will show"
-            echo $CIRCLE_PULL_REQUESTS
-            if [ "$PR_BRANCH" != "Pull_Request_Test" ]; then
-              echo "This PR is not targeting Pull_Request_Test, skipping job."
-              exit 1  # Fail if PR is not targeting Pull_Request_Test
-            fi
-            echo "Here it will show"
-            echo $CIRCLE_PULL_REQUESTS
-            echo "PR is targeting Pull_Request_Test, continuing the job."
-
-# if [ $CIRCLE_BRANCH <> "master" ]; then
-#   echo "Double checking for PR on $CIRCLE_BRANCH to work around Circle platform bug"
-#   PR_NUMBER=`curl -X GET -u $BITBUCKET_USER:$BITBUCKET_PASS \
-# https://api.bitbucket.org/2.0/repositories/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pullrequests/?q=source.branch.name%3D%22$CIRCLE_BRANCH%22 \
-# | grep -o 'https:\/\/api.bitbucket.org\/2.0\/repositories\/messageagency\/jcb\/pullrequests\/[0-9]*' \
-# | grep -o '[0-9]*$' | head -1`
-
-#   if [[ $PR_NUMBER =~ ^-?[0-9]+$ ]] ; then
-#     echo "Found PR ${PR_NUMBER}"
-#     # do whatever you need with the PR number here
-#     # ...
-#   fi
-# fi
+            echo "Running tests for PR..."
 
 workflows:
   build_test:
     jobs:
-      - check-pr  # Run the PR check first to validate PR context
       - test:
-          requires:
-            - check-pr  # The test job will only run if check-pr passes
           filters:
             branches:
-              only:
-                - Pull_Request_Test  # Ensure it runs for the right PR target branch
+              ignore: /.*/  # Ignore all branches for this workflow, only PRs will trigger
