@@ -3,7 +3,7 @@ name: PR Workflow
 on:
   pull_request_target:
     branches:
-      - Pull_Request_Test
+      - main
     types: opened
 
 jobs:
