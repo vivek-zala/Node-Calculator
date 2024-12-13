@@ -4,6 +4,7 @@ on:
   pull_request_target:
     branches:
       - Pull_Request_Test
+    types: opened
 
 jobs:
   check-fork-and-branch:
