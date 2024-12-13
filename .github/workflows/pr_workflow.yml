@@ -4,7 +4,10 @@ on:
   pull_request:
     branches:
       - Pull_Request_Test
-    types: opened
+    types:
+      - opened
+      - reopened
+
 
 jobs:
   check-fork-and-branch:
