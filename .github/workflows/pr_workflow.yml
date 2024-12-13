@@ -5,7 +5,7 @@ on:
     branches:
       - feature-branch
       - Pull_Request_Test
-      - priyank_test
+      - priyank_branch
     types:
       - opened
       - synchronize
