@@ -1,0 +1,44 @@
+name: PR Workflow
+
+on:
+  pull_request:
+    branches:
+      - Pull_Request_Test
+
+jobs:
+  check-fork-and-branch:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check if PR is from a forked repository
+        id: check_fork
+        run: |
+          # Check if the PR is from a forked repository
+          if [[ "$GITHUB_HEAD_REF" == "" || "$GITHUB_BASE_REPO" == "$GITHUB_REPOSITORY" ]]; then
+            echo "This PR is not from a forked repository. Skipping the build."
+            exit 0  # Stop the job if it's not from a forked repository
+          fi
+          echo "PR is from a forked repository."
+
+      - name: Check if branch names match
+        run: |
+          # Get the target and source branch names
+          SOURCE_BRANCH="${GITHUB_HEAD_REF}"
+          TARGET_BRANCH="${GITHUB_BASE_REF}"
+
+          if [[ "$SOURCE_BRANCH" != "$TARGET_BRANCH" ]]; then
+            echo "The source branch ($SOURCE_BRANCH) does not match the target branch ($TARGET_BRANCH). Skipping the build."
+            exit 0  # Stop the job if the branches don't match
+          fi
+          echo "Branches match: $SOURCE_BRANCH"
+      
+      - name: Install dependencies
+        run: |
+          npm install  # Your project dependencies
+
+      - name: Run tests
+        run: |
+          npm test  # Your test command
