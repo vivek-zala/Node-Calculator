@@ -1,0 +1,54 @@
+name: PR Workflow
+
+on:
+  pull_request_target:
+    branches:
+      - Pull_Request_Test
+    types: opened
+
+jobs:
+  check-fork-and-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 1: Debug the environment variables for PR details
+      - name: Debug PR information
+        run: |
+          echo "Source branch (GITHUB_EVENT_HEAD_REF): ${{ github.event.pull_request.head.ref }}"
+          echo "Target branch (GITHUB_EVENT_BASE_REF): ${{ github.event.pull_request.base.ref }}"
+          echo "Source repo (GITHUB_EVENT_HEAD_REPO): ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "Base repo (GITHUB_EVENT_BASE_REPO): ${{ github.event.pull_request.base.repo.full_name }}"
+
+      # Step 2: Check if PR is from a forked repository
+      - name: Check if PR is from a forked repository
+        id: check_fork
+        run: |
+          if [[ "${{ github.event.pull_request.head.repo.full_name }}" == "${{ github.repository }}" ]]; then
+            echo "This PR is not from a forked repository. Skipping the build."
+            exit 0  # Stop the job if it's not from a forked repository
+          fi
+          echo "PR is from a forked repository."
+
+      # Step 3: Check if branch names match
+      - name: Check if branch names match
+        run: |
+          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"
+          TARGET_BRANCH="${{ github.event.pull_request.base.ref }}"
+
+          if [[ "$SOURCE_BRANCH" != "$TARGET_BRANCH" ]]; then
+            echo "The source branch ($SOURCE_BRANCH) does not match the target branch ($TARGET_BRANCH). Skipping the build."
+            exit 0  # Stop the job if the branches don't match
+          fi
+          echo "Branches match: $SOURCE_BRANCH"
+      
+      # Step 4: Install dependencies and run tests
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Run tests
+        run: |
+          npm test
