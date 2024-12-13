@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/node:18  # Use the CircleCI Node.js Docker image
+      - image: cimg/node:23.4.0-browsers
     working_directory: ~/repo  # Set working directory to the root of the project
     steps:
       - checkout  # Checkout the code from your repository
@@ -31,13 +31,19 @@ jobs:
             fi
             
             # Extract the PR target branch from CIRCLE_PULL_REQUESTS
+            echo "Here it will show"
+            echo $CIRCLE_PULL_REQUESTS
             PR_BRANCH=$(echo $CIRCLE_PULL_REQUESTS | sed 's#.*/\(.*\)/pull/\([0-9]*\)#\1#')
 
             # Check if the PR is targeting the correct branch
+            echo "Here it will show"
+            echo $CIRCLE_PULL_REQUESTS
             if [ "$PR_BRANCH" != "Pull_Request_Test" ]; then
               echo "This PR is not targeting Pull_Request_Test, skipping job."
               exit 1  # Fail if PR is not targeting Pull_Request_Test
             fi
+            echo "Here it will show"
+            echo $CIRCLE_PULL_REQUESTS
             echo "PR is targeting Pull_Request_Test, continuing the job."
 
 # if [ $CIRCLE_BRANCH <> "master" ]; then
@@ -55,7 +61,6 @@ jobs:
 # fi
 
 workflows:
-  version: 2
   build_test:
     jobs:
       - check-pr  # Run the PR check first to validate PR context
